@@ -8,13 +8,14 @@ jobs:
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
+    if: github.repository == 'maxime-desroches/openpilot'
     steps:
     - uses: Vankka/pr-target-branch-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         target: /^(?!master$).*/
-        exclude: /commaai:.*/
+        exclude: /maxime-desroches:this_branch/
         change-to: ${{ github.base_ref }}
         already-exists-action: close_this
         already-exists-comment: "Your PR should be made against the `master` branch"
