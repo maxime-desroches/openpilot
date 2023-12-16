@@ -15,7 +15,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         target: /^(?!master$).*/
-        exclude: /maxime-desroches:this_branch/
+        exclude: /maxime-desroches:.*/
         change-to: ${{ github.base_ref }}
         already-exists-action: close_this
         already-exists-comment: "Your PR should be made against the `master` branch"
