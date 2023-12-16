@@ -16,7 +16,7 @@ jobs:
         target: /^(?!master$).*/
         exclude: /commaai:.*/
         change-to: ${{ github.base_ref }}
-        already-exists-action: close_this
         comment: |
-            Your PR should be made against the `master` branch
+          Your PR should be made against the `master` branch
+        already-exists-action: close_this
 
