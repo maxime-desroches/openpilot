@@ -1,5 +1,4 @@
 Version 0.9.6 (20XX-XX-XX)
-testest
 ========================
 * New driving model
   * Vision model trained on more data
