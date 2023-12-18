@@ -42,6 +42,32 @@ jobs:
       run: |
         ${{ env.RUN }} "pytest tools/plotjuggler/"
 
+  simulator_bridge:
+    name: simulator bridge test
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - run: git lfs pull
+    - uses: ./.github/workflows/setup-with-retry
+    - name: Build base docker image
+      run: eval "$BUILD"
+    - name: Build base cl image
+      run: eval "$BUILD_CL"
+    - name: Build openpilot
+      run: |
+        ${{ env.RUN }} "scons -j$(nproc)"
+    - name: Run bridge test
+      run: |
+        sudo apt-get install -y alsa-utils
+        lsmod
+        sudo modprobe snd-aloop
+        lsmod
+        aplay -l
+        ${{ env.RUN_CL }} "source selfdrive/test/setup_xvfb.sh && CI=1 tools/sim/tests/test_metadrive_bridge.py"
+
   simulator:
     name: simulator
     runs-on: ubuntu-20.04
