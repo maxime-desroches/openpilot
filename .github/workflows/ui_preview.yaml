@@ -1,24 +1,24 @@
 name: ui preview
 
 on:
-  workflow_call:
-    inputs:
-      pr_number:
-        required: true
-        type: number
-      report_name:
-        required: true
-        type: string
-
-permissions:
-  contents: read
-  pull-requests: write
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited]
+  paths:
+    - 'selfdrive/ui/**' # only run on change in the ui
 
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
+      - name: Wait for ui report
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'create_ui_report'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 5
+
       - name: Checkout ci-artifacts
         uses: actions/checkout@v4
         with:
@@ -30,7 +30,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.report_name }}
+          name: report-${{ github.event.number }}
           path: ${{ github.workspace }}/ci-artifacts
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,12 +40,11 @@ jobs:
           git checkout -b openpilot/pr-${{ inputs.pr_number }}
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git add ${{ github.workspace }}/ci-artifacts
-          git commit -m "screenshots for PR #${{ inputs.pr_number }}"
-          git push origin openpilot/pr-${{ inputs.pr_number }} --force
+          git add ${{ github.workspace }}/ci-artifacts/screenshots
+          git commit -m "screenshots for PR #${{ github.event.number }}"
+          git push origin openpilot/pr-${{ github.event.number }} --force
 
       - name: Comment Screenshots on PR
-        if: ${{ github.event_name == 'pull_request' }}
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
@@ -53,17 +52,17 @@ jobs:
             ## UI Screenshots
             <table>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/homescreen.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/onroad.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/homescreen.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad.png"></td>
               </tr>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/onroad_map.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/onroad_sidebar.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_map.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_sidebar.png"></td>
               </tr>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/settings_network.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ inputs.pr_number }}/${{ inputs.report_name }}/screenshots/settings_device.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_network.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_device.png"></td>
               </tr>
             </table>
-          pr_number: ${{ inputs.pr_number }}
+          pr_number: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

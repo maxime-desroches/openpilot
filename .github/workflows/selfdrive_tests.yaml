@@ -320,8 +320,6 @@ jobs:
   create_ui_report:
     name: Create UI Report
     runs-on: ubuntu-latest
-    outputs:
-      ui_diff: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -337,20 +335,5 @@ jobs:
       - name: Save Test Report
         uses: actions/upload-artifact@v4
         with:
-          name: report-${{ inputs.run_number || '1' }}
-          path: selfdrive/ui/tests/test_ui/report_${{ inputs.run_number || '1' }}
-      - name: Get changes to selfdrive/ui
-        if: ${{ github.event_name == 'pull_request' }}
-        id: changed-files
-        uses: tj-actions/changed-files@v44
-        with:
-         files: |
-            selfdrive/ui/**
-
-  post_ui_report:
-    needs: create_ui_report
-    if: ${{ github.event_name == 'pull_request' && github.repository == 'commaai/openpilot' && needs.create_ui_report.outputs.ui_diff == 'true' }}
-    uses: commaai/openpilot/.github/workflows/ui_preview.yaml@fix_ui_preview
-    with:
-      pr_number: ${{ github.event.number }}
-      report_name: report-${{ inputs.run_number || '1' }}
+          name: report-${{ github.event.number }}
+          path: selfdrive/ui/tests/test_ui/report_1
