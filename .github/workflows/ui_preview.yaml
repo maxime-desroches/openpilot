@@ -11,77 +11,83 @@ on:
 jobs:
   preview:
     name: preview
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
       pull-requests: write
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-    #- name: Installing ubuntu dependencies
-    #  run: INSTALL_EXTRA_PACKAGES=no tools/install_ubuntu_dependencies.sh
-    #- name: Installing python dependencies
-     # run: tools/install_python_dependencies.sh  
-    - name: git LFS
-      run: git lfs pull
-    - run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
-    - name: Getting scons cache
-      uses: 'actions/cache@v4'
-      with:
-        path: /tmp/scons_cache
-        key: scons-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}-${{ github.sha }}
-        restore-keys: |
-          scons-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}
-          scons-${{ runner.arch }}
-          
-  #  - name: Getting screenshots
-   #   run: |
-     #   . .venv/bin/activate
-      #  scons -u -j$(nproc)
-     #   export PYTHONWARNINGS=ignore
-     #   source selfdrive/test/setup_xvfb.sh
-     #   python3 selfdrive/ui/tests/test_ui/run.py
+      - name: Wait for ui report
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: 'Create UI Report'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          allowed-conclusions: success
+          wait-interval: 20
 
-    - name: Checkout ci-artifacts
-      uses: actions/checkout@v4
-      with:
-        repository: maxime-desroches/ci-artifacts
-        #ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
-        path: ${{ github.workspace }}/ci-artifacts
-        ref: master
 
-    - name: Push Screenshots
-      working-directory: ${{ github.workspace }}/ci-artifacts
-      run: |
-        echo 'cool' > cool
-        git checkout -b openpilot/pr-${{ github.event.number }}
-        git config user.name "GitHub Actions Bot"
-        git config user.email "<>"
-        git add ${{ github.workspace }}/ci-artifacts/cool
-        git commit -m "screenshots for PR #${{ github.event.number }}"
-        git push origin openpilot/pr-${{ github.event.number }} --force
+      - name: Get workflow run ID
+        id: get_run_id
+        run: |
+          # Fetch all workflow runs for the repository
+          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/check-runs")
+  
+          # Filter by workflow name and commit SHA
+          RUN_ID=$(echo $RESPONSE | jq -r --arg WORKFLOW_NAME "Create UI Report" --arg COMMIT_SHA "${{ github.event.pull_request.head.sha }}" \
+            '.workflow_runs[] | select(.name == $WORKFLOW_NAME and .head_sha == $COMMIT_SHA) | .id')
+  
+          echo "Run ID: $RUN_ID"
+          echo "::set-output name=run_id::$RUN_ID"
 
-    - name: Comment Screenshots on PR
-      uses: thollander/actions-comment-pull-request@v2
-      with:
-        message: |
-          <!-- _(run_id_screenshots **${{ github.run_id }}**)_ -->
-          ## UI Screenshots
-          <table>
-            <tr>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/homescreen.png"></td>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad.png"></td>
-            </tr>
-            <tr>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_map.png"></td>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_sidebar.png"></td>
-            </tr>
-            <tr>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_network.png"></td>
-              <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_device.png"></td>
-            </tr>
-          </table>
-        pr_number: ${{ github.event.number }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Checkout ci-artifacts
+        uses: actions/checkout@v4
+        with:
+          repository: maxime-desroches/ci-artifacts
+          #ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
+          path: ${{ github.workspace }}/ci-artifacts
+          ref: master
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: cool-1
+          path: ${{ github.workspace }}/ci-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Screenshots
+        working-directory: ${{ github.workspace }}/ci-artifacts
+        run: |
+          git checkout -b openpilot/pr-${{ inputs.pr_number }}
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add ${{ github.workspace }}/ci-artifacts/screenshots
+          git commit -m "screenshots for PR #${{ github.event.number }}"
+          git push origin openpilot/pr-${{ github.event.number }} --force
+
+      - name: Comment Screenshots on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            <!-- _(run_id_screenshots **${{ github.run_id }}**)_ -->
+            ## UI Screenshots
+            <table>
+              <tr>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/homescreen.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad.png"></td>
+              </tr>
+              <tr>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_map.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/onroad_sidebar.png"></td>
+              </tr>
+              <tr>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_network.png"></td>
+                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_device.png"></td>
+              </tr>
+            </table>
+          pr_number: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
