@@ -31,7 +31,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.report_name }}
-          path: .
+          path: {{ github.workspace }}/ci-artifacts
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Screenshots
@@ -40,7 +40,7 @@ jobs:
           git checkout -b openpilot/pr-${{ inputs.pr_number }}
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git add .
+          git add ${{ github.workspace }}/ci-artifacts
           git commit -m "screenshots for PR #${{ inputs.pr_number }}"
           git push origin openpilot/pr-${{ inputs.pr_number }} --force
 
