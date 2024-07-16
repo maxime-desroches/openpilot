@@ -316,6 +316,3 @@ jobs:
               repo: context.repo.repo,
               comment_id: ${{ steps.fc.outputs.comment-id }}
             })
-        with:
-          name: report-${{ github.event.number }}
-          path: selfdrive/ui/tests/test_ui/report_1
