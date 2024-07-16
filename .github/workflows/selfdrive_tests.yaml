@@ -336,4 +336,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report-${{ github.event.number }}
-          path: selfdrive/ui/tests/test_ui/report_1
+          path: selfdrive/ui/tests/test_ui/report_1/screenshots
