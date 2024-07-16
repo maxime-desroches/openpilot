@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # cool comment
 # update
-# eeeeee
 import os
 import signal
 
