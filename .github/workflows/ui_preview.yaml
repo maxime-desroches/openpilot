@@ -21,7 +21,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
           ref: ${{ github.ref }}
-          check-name: 'create_ui_report'
+          check-name: 'Create UI Report'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 5
 
