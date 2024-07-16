@@ -2,8 +2,6 @@ name: "ui preview"
 on:
   pull_request_target:
     types: [opened, reopened, synchronize, edited, edited]
-  paths:
-    - 'selfdrive/ui/**' # only run on change in the ui
 
 jobs:
   preview:
