@@ -68,16 +68,16 @@ jobs:
             ## UI Screenshots
             <table>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/homescreen.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/homescreen.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad.png"></td>
               </tr>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad_map.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad_sidebar.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad_map.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/onroad_sidebar.png"></td>
               </tr>
               <tr>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/settings_network.png"></td>
-                <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/settings_device.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/settings_network.png"></td>
+                <td><img src="https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot/pr-${{ github.event.number }}/settings_device.png"></td>
               </tr>
             </table>
           comment_tag: run_id_screenshots
