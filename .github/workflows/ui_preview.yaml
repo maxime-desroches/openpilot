@@ -56,7 +56,7 @@ jobs:
       working-directory: ${{ github.workspace }}/ci-artifacts
       run: |
         echo 'cool' > cool
-        git checkout -b openpilot/pr-${{ inputs.pr_number }}
+        git checkout -b openpilot/pr-${{ github.event.number }}
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add ${{ github.workspace }}/ci-artifacts/cool
