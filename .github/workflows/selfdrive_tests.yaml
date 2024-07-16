@@ -346,7 +346,7 @@ jobs:
             selfdrive/ui/**
       - name: Post UI Preview
         if: ${{ github.event_name == 'pull_request' && github.repository == 'commaai/openpilot' && steps.changed-files.outputs.any_changed == 'true' }}
-        uses: ./.github/workflows/ui_preview.yaml # temp
+        uses: commaai/openpilot/.github/workflows/ui_preview.yaml@fix_ui_preview
         with:
           pr_number: ${{ github.event.number }}
           report_name: report-${{ inputs.run_number || '1' }}
