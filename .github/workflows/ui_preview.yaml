@@ -31,7 +31,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.report_name }}
-          path: {{ github.workspace }}/ci-artifacts
+          path: ${{ github.workspace }}/ci-artifacts
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Screenshots
