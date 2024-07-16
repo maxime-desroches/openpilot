@@ -1,7 +1,12 @@
 name: "ui preview"
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize, edited, edited]
+    types:
+      - opened
+    branches:
+      - 'master'
+    paths:
+      - 'selfdrive/ui/**'
 
 jobs:
   preview:
@@ -23,8 +28,8 @@ jobs:
       - name: Checkout ci-artifacts
         uses: actions/checkout@v4
         with:
-          repository: commaai/ci-artifacts
-          ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
+          repository: maxime-desroches/ci-artifacts
+          #ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
           path: ${{ github.workspace }}/ci-artifacts
           ref: master
 
