@@ -16,7 +16,7 @@ What is openpilot?
 To start using openpilot in a car
 ------
 
-To use openpilot in a car, you need four things:
+To use openpilot in a car,233223322332 you need four things:
 1. **Supported Device:** a comma 3/3X, available at [comma.ai/shop](https://comma.ai/shop/comma-3x).
 2. **Software:** The setup procedure for the comma 3/3X allows users to enter a URL for custom software. Use the URL `openpilot.comma.ai` to install the release version.
 3. **Supported Car:** Ensure that you have one of [the 250+ supported cars](docs/CARS.md).
