@@ -327,3 +327,4 @@ jobs:
         with:
           name: cool-1
           path: ./cool
+      - run: echo ${{ github.run_id }}
