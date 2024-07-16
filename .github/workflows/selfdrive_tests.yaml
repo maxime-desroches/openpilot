@@ -316,24 +316,6 @@ jobs:
               repo: context.repo.repo,
               comment_id: ${{ steps.fc.outputs.comment-id }}
             })
-
-  create_ui_report:
-    name: Create UI Report
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - uses: ./.github/workflows/setup-with-retry
-      - name: Build openpilot
-        run: ${{ env.RUN }} "scons -j$(nproc)"
-      - name: Create Test Report
-        run: >
-            ${{ env.RUN }} "PYTHONWARNINGS=ignore &&
-                            source selfdrive/test/setup_xvfb.sh &&
-                            python selfdrive/ui/tests/test_ui/run.py"
-      - name: Save Test Report
-        uses: actions/upload-artifact@v4
         with:
           name: report-${{ github.event.number }}
           path: selfdrive/ui/tests/test_ui/report_1
