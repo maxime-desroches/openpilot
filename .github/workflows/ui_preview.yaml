@@ -48,7 +48,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           run_id: ${{ steps.get_run_id.outputs.run_id }}
-          commit: ${{ github.event.pull_request.head.sha }}
           search_artifacts: true
           name: cool-1
 
