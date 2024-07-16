@@ -9,6 +9,7 @@ on:
 
 jobs:
   preview:
+    if: github.repository == 'maxime-desroches/openpilot'
     name: preview
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -46,7 +47,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           run_id: ${{ steps.get_run_id.outputs.run_id }}
           search_artifacts: true
-          name: cool-1
+          name: report-${{ github.event.number }}
           path: ${{ github.workspace }}/ci-artifacts
 
       - name: Push Screenshots
@@ -55,7 +56,7 @@ jobs:
           git checkout -b openpilot/pr-${{ github.event.number }}
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git add ${{ github.workspace }}/ci-artifacts/cool
+          git add ${{ github.workspace }}/ci-artifacts/report-${{ github.event.number }}/screenshots
           git commit -m "screenshots for PR #${{ github.event.number }}"
           git push origin openpilot/pr-${{ github.event.number }} --force
 
@@ -79,5 +80,6 @@ jobs:
                 <td><img src="https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot/pr-${{ github.event.number }}/report-${{ github.event.number }}/screenshots/settings_device.png"></td>
               </tr>
             </table>
+          comment_tag: run_id_screenshots
           pr_number: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
