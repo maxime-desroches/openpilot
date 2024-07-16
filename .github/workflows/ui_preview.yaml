@@ -47,10 +47,10 @@ jobs:
         uses: dawidd6/action-download-artifact@v6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          name: cool-1
-          run-id: ${{ steps.get_run_id.outputs.run_id }}
+          run_id: ${{ steps.get_run_id.outputs.run_id }}
           commit: ${{ github.event.pull_request.head.sha }}
           search_artifacts: true
+          name: cool-1
 
       - name: Push Screenshots
         working-directory: ${{ github.workspace }}/ci-artifacts
