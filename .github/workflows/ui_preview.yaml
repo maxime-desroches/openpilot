@@ -41,13 +41,16 @@ jobs:
           #ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
           path: ${{ github.workspace }}/ci-artifacts
           ref: master
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+          
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v6
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           name: cool-1
-          path: ${{ github.workspace }}/ci-artifacts
           run-id: ${{ steps.get_run_id.outputs.run_id }}
+          commit: ${{ github.event.pull_request.head.sha }}
+          search_artifacts: true
 
       - name: Push Screenshots
         working-directory: ${{ github.workspace }}/ci-artifacts
