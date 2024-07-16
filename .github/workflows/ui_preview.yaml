@@ -18,6 +18,9 @@ jobs:
       pull-requests: write
       actions: read
     steps:
+      - name: Waiting for ui test to start
+        run: sleep 30
+        
       - name: Wait for ui report
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
