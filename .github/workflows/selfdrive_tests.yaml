@@ -316,3 +316,14 @@ jobs:
               repo: context.repo.repo,
               comment_id: ${{ steps.fc.outputs.comment-id }}
             })
+
+  create_ui_report:
+    name: Create UI Report
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "aaa" > cool
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cool-1
+          path: ./cool
