@@ -349,7 +349,7 @@ jobs:
 
   post_ui_report:
     needs: create_ui_report
-    if: ${{ github.event_name == 'pull_request' && github.repository == 'commaai/openpilot' && create_ui_report.outputs.ui_diff == 'true' }}
+    if: ${{ github.event_name == 'pull_request' && github.repository == 'commaai/openpilot' && needs.create_ui_report.outputs.ui_diff == 'true' }}
     uses: commaai/openpilot/.github/workflows/ui_preview.yaml@fix_ui_preview
     with:
       pr_number: ${{ github.event.number }}
