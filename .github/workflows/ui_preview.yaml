@@ -34,12 +34,19 @@ jobs:
           path: ${{ github.workspace }}/ci-artifacts
           ref: master
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v6
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: selfdrive_tests.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
           name: report-${{ github.event.number }}
           path: ${{ github.workspace }}/ci-artifacts
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          search_artifacts: true
+          if_no_artifact_found: fail
+          allow_forks: true
 
       - name: Push Screenshots
         working-directory: ${{ github.workspace }}/ci-artifacts
