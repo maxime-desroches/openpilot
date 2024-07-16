@@ -39,12 +39,13 @@ jobs:
         uses: dawidd6/action-download-artifact@v6
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: selfdrive_tests.yaml
-          workflow_conclusion: success
-          pr: ${{github.event.pull_request.number}}
+          workflow_search: true
+          workflow_conclusion: ""
+          pr: ${{ github.event.number }}
           name: report-${{ github.event.number }}
           path: ${{ github.workspace }}/ci-artifacts
-          search_artifacts: true
+          search_artifacts: false
+          check_artifacts: true
           if_no_artifact_found: fail
           allow_forks: true
 
