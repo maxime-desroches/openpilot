@@ -23,7 +23,8 @@ jobs:
           ref: ${{ github.ref }}
           check-name: 'Create UI Report'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 5
+          allowed-conclusions: success,skipped,cancelled,completed
+          wait-interval: 10
 
       - name: Checkout ci-artifacts
         uses: actions/checkout@v4
