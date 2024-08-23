@@ -1,0 +1,76 @@
+name: project report
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      matrix:
+        platform: [ubuntu-24.04, macos-latest]
+        #platform: [ubuntu-24.04, macos-latest, namespace-profile-arm64-2x8]
+    steps:
+        name: Setup time
+        run: |
+          time curl -fsSL openpilot.comma.ai | bash
+        #name: Build time
+        #run: |
+        #time tools/op.sh build --no-cache
+        name: openpilot size
+        run: |
+          du -hs . --exclude .git
+        name: git folder size
+        run: |
+          du -hs .git
+        name: Python venv size
+        run: |
+          du -hs .venv
+        name: Python packages count
+        run: |
+          uv pip show | tail -n +3 | wc -l
+
+  report:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Generating report
+        run: |
+          cat <<EOF >> template.html
+          <table>
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Setup time</th>
+                <th>openpilot size</th>
+                <th>git folder size</th>
+                <th>Python venv size</th>
+                <th>Python packages</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Linux</td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>MacOS</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+              </tr>
+          </table>
+          EOF
+
+          cat report.html >> $GITHUB_STEP_SUMMARY
