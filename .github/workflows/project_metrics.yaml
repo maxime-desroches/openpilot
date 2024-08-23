@@ -38,7 +38,7 @@ jobs:
           echo "openpilot/.venv/bin" >> $GITHUB_PATH
       - name: Python packages count
         run: |
-          output=$(uv pip show | tail -n +3 | wc -l)
+          output=$(uv pip list | tail -n +3 | wc -l)
           echo "python_packages_count=$output" >> $GITHUB_OUTPUT
 
   report:
