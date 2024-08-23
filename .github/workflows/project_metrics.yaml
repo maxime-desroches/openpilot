@@ -1,4 +1,4 @@
-name: project report
+name: project metrics
 on:
   pull_request:
   workflow_dispatch:
@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Generating report
         run: |
-          cat <<EOF >> template.html
+          cat <<EOF >> report.html
           <table>
             <thead>
               <tr>
