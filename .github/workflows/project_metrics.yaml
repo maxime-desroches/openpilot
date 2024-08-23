@@ -12,7 +12,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     strategy:
       matrix:
-        platform: [ubuntu-24.04, macos-latest]
+        platform: [ubuntu-24.04]
+        #platform: [ubuntu-24.04, macos-latest]
         #platform: [ubuntu-24.04, macos-latest, namespace-profile-arm64-2x8]
     steps:
       - name: Setup time
@@ -23,15 +24,16 @@ jobs:
         #time tools/op.sh build --no-cache
       - name: openpilot size
         run: |
-          du -hs . --exclude .git
+          du -hs openpilot --exclude .git
       - name: git folder size
         run: |
-          du -hs .git
+          du -hs openpilot/.git
       - name: Python venv size
         run: |
-          du -hs .venv
+          du -hs openpilot/.venv
       - name: Python packages count
         run: |
+          source openpilot/.venv/bin/activate
           uv pip show | tail -n +3 | wc -l
 
   report:
