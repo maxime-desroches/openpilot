@@ -12,7 +12,6 @@ jobs:
     runs-on: ${{ matrix.platform }}
     outputs:
       setup_time: ${{ steps.metrics.outputs.setup_time }}
-      openpilot_size: ${{ steps.metrics.outputs.openpilot_size }}
     strategy:
       matrix:
         platform: [ubuntu-24.04]
@@ -22,22 +21,22 @@ jobs:
         run: |
           output=$(time curl -fsSL openpilot.comma.ai | bash)
           echo "setup_time=$output" >> $GITHUB_OUTPUT
-        name: openpilot size
+      - name: openpilot size
         run: |
           output=$(du -hs openpilot --exclude .git)
           echo "openpilot_size=$output" >> $GITHUB_OUTPUT
-        name: git folder size
+      - name: git folder size
         run: |
           output=$(du -hs openpilot/.git)
           echo "git_size=$output" >> $GITHUB_OUTPUT
-        name: Python venv size
+      - name: Python venv size
         run: |
           output=$(du -hs openpilot/.venv)
           echo "python_venv_size=$output" >> $GITHUB_OUTPUT
-        name: Activating venv
+      - name: Activating venv
         run: |
           echo "openpilot/.venv/bin" >> $GITHUB_PATH
-        name: Python packages count
+      - name: Python packages count
         run: |
           output=$(uv pip show | tail -n +3 | wc -l)
           echo "python_packages_count=$output" >> $GITHUB_OUTPUT
@@ -65,7 +64,7 @@ jobs:
               <tr>
                 <td>Linux</td>
                 <td>${{fromJSON(needs.setup.outputs.setup_time)}}</td>
-                <td>${{fromJSON(needs.setup.outputs.openpilot_size)}}</td>
+                <td>${{fromJSON(needs.setup.outputs.setup_time)}}</td>
                 <td>3</td>
                 <td>3</td>
                 <td>3</td>
