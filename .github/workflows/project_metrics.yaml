@@ -15,22 +15,22 @@ jobs:
         platform: [ubuntu-24.04, macos-latest]
         #platform: [ubuntu-24.04, macos-latest, namespace-profile-arm64-2x8]
     steps:
-        name: Setup time
+      - name: Setup time
         run: |
           time curl -fsSL openpilot.comma.ai | bash
         #name: Build time
         #run: |
         #time tools/op.sh build --no-cache
-        name: openpilot size
+      - name: openpilot size
         run: |
           du -hs . --exclude .git
-        name: git folder size
+      - name: git folder size
         run: |
           du -hs .git
-        name: Python venv size
+      - name: Python venv size
         run: |
           du -hs .venv
-        name: Python packages count
+      - name: Python packages count
         run: |
           uv pip show | tail -n +3 | wc -l
 
