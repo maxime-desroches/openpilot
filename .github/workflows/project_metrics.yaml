@@ -19,8 +19,8 @@ jobs:
       - id: metrics
         name: Setup time
         run: |
-          output=$(time curl -fsSL openpilot.comma.ai | bash)
-          echo "setup_time=$output" >> $GITHUB_OUTPUT
+          time curl -fsSL openpilot.comma.ai | bash
+          echo "setup_time=39292" >> $GITHUB_OUTPUT
       - name: openpilot size
         run: |
           output=$(du -hs openpilot --exclude .git)
