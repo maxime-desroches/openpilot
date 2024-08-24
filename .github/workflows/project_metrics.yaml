@@ -45,8 +45,8 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).time_a }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).time_a }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
