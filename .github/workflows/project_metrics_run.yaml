@@ -7,7 +7,7 @@ on:
         type: string
 
 concurrency:
-  group: project_metrics_run_${{ github.workflow }}-${{ github.ref }}
+  group: project_metrics_run_${{ inputs.platform }}_${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
