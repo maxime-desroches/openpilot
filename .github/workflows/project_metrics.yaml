@@ -11,15 +11,9 @@ jobs:
   setup:
     runs-on: ${{ matrix.platform }}
     outputs:
-      metrics_macos: ${{ fromJSON(steps.setup_time.outputs.metrics_macos-latest) }}
-      #setup_time: ${{ steps.setup_time.outputs.setup_time }}
-      #openpilot_size: ${{ steps.openpilot_size.outputs.openpilot_size }}
-      #git_size: ${{ steps.git_size.outputs.git_size }}
-      #python_venv_size: ${{ steps.python_venv_size.outputs.python_venv_size }}
-      #python_packages_count: ${{ steps.python_packages_count.outputs.python_packages_count }}
+      metrics_macos: ${{ steps.setup_time.outputs.metrics_macos-latest }}
     strategy:
       matrix:
-        #platform: [ubuntu-24.04, macos-latest]
         platform: [macos-latest]
     steps:
       - id: setup_time
@@ -51,11 +45,11 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux</td>
-                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
-                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
-                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
-                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
-                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
               </tr>
               <tr>
                 <td>MacOS</td>
