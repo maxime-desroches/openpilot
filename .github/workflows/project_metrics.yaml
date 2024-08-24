@@ -28,17 +28,17 @@ jobs:
       - id: openpilot_size
         name: openpilot size
         run: |
-          output=$(du -hs openpilot --exclude .git)
+          output=$(du -hs openpilot --exclude .git | cut -f1)
           echo "openpilot_size=$output" >> $GITHUB_OUTPUT
       - id: git_size
         name: git folder size
         run: |
-          output=$(du -hs openpilot/.git)
+          output=$(du -hs openpilot/.git | cut -f1)
           echo "git_size=$output" >> $GITHUB_OUTPUT
       - id: python_venv_size
         name: Python venv size
         run: |
-          output=$(du -hs openpilot/.venv)
+          output=$(du -hs openpilot/.venv | cut -f1)
           echo "python_venv_size=$output" >> $GITHUB_OUTPUT
       - name: Activating venv
         run: |
@@ -71,11 +71,11 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux</td>
+                <td>${{ needs.setup.outputs.setup_time }}</td>
                 <td>${{ needs.setup.outputs.openpilot_size }}</td>
                 <td>${{ needs.setup.outputs.git_size }}</td>
-                <td>3</td>
-                <td>3</td>
-                <td>3</td>
+                <td>${{ needs.setup.outputs.python_venv_size }}</td>
+                <td>${{ needs.setup.outputs.python_packages_count }}</td>
               </tr>
               <tr>
                 <td>MacOS</td>
