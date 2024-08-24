@@ -9,12 +9,12 @@ concurrency:
 
 jobs:
   macos:
-    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
+    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@openpilot_metrics
     with:
       platform: "macos-latest"
 
   linux_x86:
-    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
+    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@openpilot_metrics
     with:
       platform: "ubuntu-24.04"
 
