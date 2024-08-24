@@ -23,9 +23,8 @@ jobs:
       - id: setup_time
         name: Setup time
         run: |
-          #output=$((time curl -fsSL openpilot.comma.ai | bash) 2>&1 | tail -n1)
-          #echo "setup_time=$output" >> $GITHUB_OUTPUT
-          echo "setup_time=333" >> $GITHUB_OUTPUT
+          output=$((time curl -fsSL openpilot.comma.ai | bash) 2>&1 | tail -n1)
+          echo "setup_time=$output" >> $GITHUB_OUTPUT
       - id: openpilot_size
         name: openpilot size
         run: |
