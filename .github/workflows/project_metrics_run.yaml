@@ -5,6 +5,17 @@ on:
       platform:
         required: true
         type: string
+    outputs:
+      setup_time:
+        value: ${{ jobs.setup.outputs.setup_time }}
+      openpilot_size:
+        value: ${{ steps.openpilot_size.outputs.openpilot_size }}
+      git_size:
+        value: ${{ steps.git_size.outputs.git_size }}
+      python_venv_size:
+        value: ${{ steps.python_venv_size.outputs.python_venv_size }}
+      python_packages_count:
+        value: ${{ steps.python_packages_count.outputs.python_packages_count }}
 
 concurrency:
   group: project_metrics_run_${{ inputs.platform }}_${{ github.workflow }}-${{ github.ref }}
@@ -14,16 +25,11 @@ jobs:
   setup:
     runs-on: ${{ inputs.platform }}
     outputs:
-      setup_time:
-        value: ${{ steps.setup_time.outputs.setup_time }}
-      openpilot_size:
-        value: ${{ steps.openpilot_size.outputs.openpilot_size }}
-      git_size:
-        value: ${{ steps.git_size.outputs.git_size }}
-      python_venv_size:
-        value: ${{ steps.python_venv_size.outputs.python_venv_size }}
-      python_packages_count:
-        value: ${{ steps.python_packages_count.outputs.python_packages_count }}
+      setup_time: ${{ steps.setup_time.outputs.setup_time }}
+      openpilot_size: ${{ steps.openpilot_size.outputs.openpilot_size }}
+      git_size: ${{ steps.git_size.outputs.git_size }}
+      python_venv_size: ${{ steps.python_venv_size.outputs.python_venv_size }}
+      python_packages_count: ${{ steps.python_packages_count.outputs.python_packages_count }}
     steps:
       - id: setup_time
         name: Setup time
