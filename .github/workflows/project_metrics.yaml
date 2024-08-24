@@ -11,16 +11,17 @@ jobs:
   setup:
     runs-on: ${{ matrix.platform }}
     outputs:
-      setup_time: ${{ steps.metrics.outputs.setup_time }}
+      setup_time: ${{ steps.setup_time.outputs.setup_time }}
     strategy:
       matrix:
         platform: [ubuntu-24.04]
     steps:
-      - id: metrics
+      - id: setup_time
         name: Setup time
         run: |
-          time curl -fsSL openpilot.comma.ai | bash
-          echo "setup_time=39292" >> $GITHUB_OUTPUT
+          echo "TIMEFORMAT='%lR'" >> $GITHUB_ENV
+          output=$((time curl -fsSL openpilot.comma.ai | bash) 2>&1 | tail -n1)
+          echo "setup_time=$output" >> $GITHUB_OUTPUT
       - name: openpilot size
         run: |
           output=$(du -hs openpilot --exclude .git)
