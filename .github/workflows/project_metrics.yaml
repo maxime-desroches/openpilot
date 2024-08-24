@@ -11,7 +11,7 @@ jobs:
   setup:
     runs-on: ${{ matrix.platform }}
     outputs:
-      setup_time_linux: ${{ steps.setup_time.outputs.setup_time_macos-latest }}
+      metrics_macos: ${{ fromJSON(steps.setup_time.outputs.metrics_macos-latest) }}
       #setup_time: ${{ steps.setup_time.outputs.setup_time }}
       #openpilot_size: ${{ steps.openpilot_size.outputs.openpilot_size }}
       #git_size: ${{ steps.git_size.outputs.git_size }}
@@ -25,8 +25,9 @@ jobs:
       - id: setup_time
         name: Setup time
         run: |
-          output=$(echo "303030")
-          echo "setup_time_${{ matrix.platform }}=$output" >> $GITHUB_OUTPUT
+          a=$(echo "aaaaaa")
+          b=$(echo "bbbbbb")
+          echo "metrics_${{ matrix.platform }}={\"time_a\":\"vache\"}" >> $GITHUB_OUTPUT
 
   report:
     needs: [setup]
@@ -50,11 +51,11 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux</td>
-                <td>${{ needs.setup.outputs.setup_time_linux }}</td>
-                <td>${{ needs.setup.outputs.setup_time_linux }}</td>
-                <td>${{ needs.setup.outputs.setup_time_linux }}</td>
-                <td>${{ needs.setup.outputs.setup_time_linux }}</td>
-                <td>${{ needs.setup.outputs.setup_time_linux }}</td>
+                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
+                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
+                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
+                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
+                <td>${{ needs.setup.outputs.metrics_macos.time_a }}</td>
               </tr>
               <tr>
                 <td>MacOS</td>
