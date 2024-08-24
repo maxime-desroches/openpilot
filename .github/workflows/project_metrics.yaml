@@ -71,8 +71,8 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux</td>
-                <td>${{fromJSON(needs.setup.outputs.setup_time)}}</td>
-                <td>${{fromJSON(needs.setup.outputs.setup_time)}}</td>
+                <td>${{fromJSON(needs.setup.outputs.openpilot_size)}}</td>
+                <td>${{fromJSON(needs.setup.outputs.git_size)}}</td>
                 <td>3</td>
                 <td>3</td>
                 <td>3</td>
