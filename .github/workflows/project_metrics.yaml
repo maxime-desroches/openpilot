@@ -8,29 +8,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup:
-    runs-on: ${{ matrix.platform.runner }}
-    outputs:
-      metrics_linux_x86:     ${{ steps.setup_time.outputs.metrics_linux_x86 }}
-      #metrics_linux_aarch64: ${{ steps.setup_time.outputs.metrics_linux_aarch64 }}
-      metrics_macos:         ${{ steps.setup_time.outputs.metrics_macos }}
-    strategy:
-      matrix:
-        platform: [ {runner: macos-latest, name: macos}, {runner: ubuntu-24.04, name: linux_x86} ]
-    steps:
-      - id: setup_time
-        name: Setup time
-        run: |
-          setup_time=$((time curl -fsSL openpilot.comma.ai | bash) 2>&1 | tail -n3 | head -n1 | cut -f2)
-          openpilot_size=$(du -hs openpilot --exclude=.git --exclude=.venv | cut -f1)
-          git_size=$(du -hs openpilot/.git | cut -f1)
-          python_venv_size=$(du -hs openpilot/.venv | cut -f1)
-          echo "openpilot/.venv/bin" >> $GITHUB_PATH
-          python_packages_count=$(uv pip list | tail -n +3 | wc -l)
-          echo "metrics_${{ matrix.platform.name }}={\"setup_time\":\"$setup_time\", \"openpilot_size\":\"$openpilot_size\", \"git_size\":\"$git_size\", \"python_venv_size\":\"$python_venv_size\", \"python_packages_count\":\"$python_packages_count\"}" >> $GITHUB_OUTPUT
+  macos:
+    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
+    with:
+      platform: "macos-latest"
+
+  linux_x86:
+    uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
+    with:
+      platform: "ubuntu-24.04"
 
   report:
-    needs: [setup]
+    needs: [macos, linux_x86]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -51,19 +40,19 @@ jobs:
             <tbody>
               <tr>
                 <td>Linux x86</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_linux_x86).setup_time }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_linux_x86).openpilot_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_linux_x86).git_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_linux_x86).python_venv_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_linux_x86).python_packages_count }}</td>
+                <td>${{ needs.linux_x86.outputs.setup_time }}</td>
+                <td>${{ needs.linux_x86.outputs.openpilot_size }}</td>
+                <td>${{ needs.linux_x86.outputs.git_size }}</td>
+                <td>${{ needs.linux_x86.outputs.python_venv_size }}</td>
+                <td>${{ needs.linux_x86.outputs.python_packages_count }}</td>
               </tr>
               <tr>
                 <td>MacOS</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).setup_time }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).openpilot_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).git_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).python_venv_size }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).python_packages_count }}</td>
+                <td>${{ needs.macos.outputs.setup_time }}</td>
+                <td>${{ needs.macos.outputs.openpilot_size }}</td>
+                <td>${{ needs.macos.outputs.git_size }}</td>
+                <td>${{ needs.macos.outputs.python_venv_size }}</td>
+                <td>${{ needs.macos.outputs.python_packages_count }}</td>
               </tr>
           </table>
           EOF
