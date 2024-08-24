@@ -34,22 +34,22 @@ jobs:
       - id: setup_time
         name: Setup time
         run: |
-          output=$(echo "33s")
+          output=$((time curl -fsSL openpilot.comma.ai | bash) 2>&1 | tail -n3 | head -n1 | cut -f2)
           echo "setup_time=$output" >> $GITHUB_OUTPUT
       - id: openpilot_size
         name: openpilot size
         run: |
-          output=$(echo "33G")
+          output=$(du -hs openpilot --exclude=.git --exclude=.venv | cut -f1)
           echo "openpilot_size=$output" >> $GITHUB_OUTPUT
       - id: git_size
         name: git folder size
         run: |
-          output=$(echo "36G")
+          output=$(du -hs openpilot/.git | cut -f1)
           echo "git_size=$output" >> $GITHUB_OUTPUT
       - id: python_venv_size
         name: Python venv size
         run: |
-          output=$(echo "40G")
+          output=$(du -hs openpilot/.venv | cut -f1)
           echo "python_venv_size=$output" >> $GITHUB_OUTPUT
       - name: Activating venv
         run: |
@@ -57,5 +57,5 @@ jobs:
       - id: python_packages_count
         name: Python packages count
         run: |
-          output=$(echo "40333")
+          output=$(uv pip list | tail -n +3 | wc -l)
           echo "python_packages_count=$output" >> $GITHUB_OUTPUT
