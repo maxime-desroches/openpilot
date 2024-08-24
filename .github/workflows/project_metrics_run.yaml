@@ -9,13 +9,13 @@ on:
       setup_time:
         value: ${{ jobs.setup.outputs.setup_time }}
       openpilot_size:
-        value: ${{ steps.openpilot_size.outputs.openpilot_size }}
+        value: ${{ jobs.setup.outputs.openpilot_size }}
       git_size:
-        value: ${{ steps.git_size.outputs.git_size }}
+        value: ${{ jobs.setup.outputs.git_size }}
       python_venv_size:
-        value: ${{ steps.python_venv_size.outputs.python_venv_size }}
+        value: ${{ jobs.setup.outputs.python_venv_size }}
       python_packages_count:
-        value: ${{ steps.python_packages_count.outputs.python_packages_count }}
+        value: ${{ jobs.setup.outputs.python_packages_count }}
 
 concurrency:
   group: project_metrics_run_${{ inputs.platform }}_${{ github.workflow }}-${{ github.ref }}
