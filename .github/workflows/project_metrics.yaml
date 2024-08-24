@@ -16,6 +16,7 @@ jobs:
     with:
       platform: "macos-latest"
 
+
   linux_x86:
     if: github.repository == 'maxime-desroches/openpilot'
     uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
