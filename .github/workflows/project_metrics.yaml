@@ -21,7 +21,7 @@ jobs:
         run: |
           a=$(echo "aaaaaa")
           b=$(echo "bbbbbb")
-          echo "metrics_${{ matrix.platform }}={\"time_a\":\"vache\"}" >> $GITHUB_OUTPUT
+          echo "metrics_${{ matrix.platform }}={\"time_a\":\"$a\", \"time_b\":\"$b\"}" >> $GITHUB_OUTPUT
 
   report:
     needs: [setup]
@@ -46,7 +46,7 @@ jobs:
               <tr>
                 <td>Linux</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos).time_a }}</td>
-                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).time_a }}</td>
+                <td>${{ fromJSON(needs.setup.outputs.metrics_macos).time_b }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
                 <td>${{ fromJSON(needs.setup.outputs.metrics_macos) }}</td>
