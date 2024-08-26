@@ -8,8 +8,6 @@ on:
     outputs:
       setup_time:
         value: ${{ jobs.setup.outputs.setup_time }}
-      openpilot_size:
-        value: ${{ jobs.setup.outputs.openpilot_size }}
       git_size:
         value: ${{ jobs.setup.outputs.git_size }}
       python_venv_size:
@@ -26,7 +24,6 @@ jobs:
     runs-on: ${{ inputs.platform }}
     outputs:
       setup_time: ${{ steps.setup_time.outputs.output }}
-      openpilot_size: ${{ steps.openpilot_size.outputs.output }}
       git_size: ${{ steps.git_size.outputs.output }}
       python_venv_size: ${{ steps.python_venv_size.outputs.output }}
       python_packages_count: ${{ steps.python_packages_count.outputs.output }}
@@ -36,11 +33,6 @@ jobs:
         run: |
           exec 3>&1 4>&2
           output=$({ time curl -fsSL openpilot.comma.ai | bash 1>&3 2>&4; } 2>&1 | tail -n3 | head -n1 | cut -f2)
-          echo "output=$output" >> $GITHUB_OUTPUT
-      - id: openpilot_size
-        name: openpilot size
-        run: |
-          output=$(du -hs openpilot --exclude=.git --exclude=.venv | cut -f1)
           echo "output=$output" >> $GITHUB_OUTPUT
       - id: git_size
         name: git folder size
