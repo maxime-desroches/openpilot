@@ -8,6 +8,8 @@ on:
     outputs:
       setup_time:
         value: ${{ jobs.setup.outputs.setup_time }}
+      build_time:
+        value: ${{ jobs.setup.outputs.build_time }}
       git_size:
         value: ${{ jobs.setup.outputs.git_size }}
       python_venv_size:
@@ -24,6 +26,7 @@ jobs:
     runs-on: ${{ inputs.platform }}
     outputs:
       setup_time: ${{ steps.setup_time.outputs.output }}
+      build_time: ${{ steps.build_time.outputs.output }}
       git_size: ${{ steps.git_size.outputs.output }}
       python_venv_size: ${{ steps.python_venv_size.outputs.output }}
       python_packages_count: ${{ steps.python_packages_count.outputs.output }}
@@ -33,6 +36,15 @@ jobs:
         run: |
           exec 3>&1 4>&2
           output=$({ time curl -fsSL openpilot.comma.ai | bash 1>&3 2>&4; } 2>&1 | tail -n3 | head -n1 | cut -f2)
+          echo "output=$output" >> $GITHUB_OUTPUT
+      - name: Activating venv
+        run: |
+          echo "openpilot/.venv/bin" >> $GITHUB_PATH
+      - id: build_time
+        name: Build time
+        run: |
+          exec 3>&1 4>&2
+          output=$({ time scons --no-cache -C openpilot 1>&3 2>&4; } 2>&1 | tail -n3 | head -n1 | cut -f2)
           echo "output=$output" >> $GITHUB_OUTPUT
       - id: git_size
         name: git folder size
@@ -44,9 +56,6 @@ jobs:
         run: |
           output=$(du -hs openpilot/.venv | cut -f1)
           echo "output=$output" >> $GITHUB_OUTPUT
-      - name: Activating venv
-        run: |
-          echo "openpilot/.venv/bin" >> $GITHUB_PATH
       - id: python_packages_count
         name: Python packages count
         run: |

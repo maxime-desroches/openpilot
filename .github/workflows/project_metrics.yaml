@@ -1,6 +1,8 @@
 name: project metrics
 on:
   pull_request:
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -9,11 +11,13 @@ concurrency:
 
 jobs:
   macos:
+    if: github.repository == 'maxime-desroches/openpilot'
     uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
     with:
       platform: "macos-latest"
 
   linux_x86:
+    if: github.repository == 'maxime-desroches/openpilot'
     uses: maxime-desroches/openpilot/.github/workflows/project_metrics_run.yaml@master
     with:
       platform: "ubuntu-24.04"
@@ -21,7 +25,7 @@ jobs:
   report:
     needs: [macos, linux_x86]
     runs-on: ubuntu-latest
-    if: always()
+    if: github.repository == 'maxime-desroches/openpilot'
     steps:
       - name: Generating report
         run: |
@@ -31,6 +35,7 @@ jobs:
               <tr>
                 <th>Platform</th>
                 <th>Setup time</th>
+                <th>Build time</th>
                 <th>git folder size</th>
                 <th>Python venv size</th>
                 <th>Python packages</th>
@@ -40,6 +45,7 @@ jobs:
               <tr>
                 <td>Linux x86</td>
                 <td>${{ needs.linux_x86.outputs.setup_time }}</td>
+                <td>${{ needs.linux_x86.outputs.build_time }}</td>
                 <td>${{ needs.linux_x86.outputs.git_size }}</td>
                 <td>${{ needs.linux_x86.outputs.python_venv_size }}</td>
                 <td>${{ needs.linux_x86.outputs.python_packages_count }}</td>
@@ -47,6 +53,7 @@ jobs:
               <tr>
                 <td>MacOS</td>
                 <td>${{ needs.macos.outputs.setup_time }}</td>
+                <td>${{ needs.macos.outputs.build_time }}</td>
                 <td>${{ needs.macos.outputs.git_size }}</td>
                 <td>${{ needs.macos.outputs.python_venv_size }}</td>
                 <td>${{ needs.macos.outputs.python_packages_count }}</td>
