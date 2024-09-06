@@ -40,7 +40,7 @@ jobs:
       - name: Finding diff
         run: |
           sudo apt-get install -y imagemagick
-          compare -fuzz 2% -highlight-color DeepSkyBlue1 -lowlight-color none ${{ github.workspace }}/master/ci-artifacts/onroad_alert_mid.png ${{ github.workspace }}/pr/ci-artifacts/onroad_alert_mid.png diff.png
+          compare -fuzz 2% -highlight-color DeepSkyBlue1 -lowlight-color none ${{ github.workspace }}/master/ci-artifacts/onroad_alert_mid.png ${{ github.workspace }}/pr/ci-artifacts/onroad_alert_mid.png diff.png || true
           mv diff.png ${{ github.workspace }}/ci-artifacts/pr
 
       - name: Push Screenshots
