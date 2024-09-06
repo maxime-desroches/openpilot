@@ -41,14 +41,14 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick
           compare -fuzz 2% -highlight-color DeepSkyBlue1 -lowlight-color none ${{ github.workspace }}/master/ci-artifacts/onroad_alert_mid.png ${{ github.workspace }}/pr/ci-artifacts/onroad_alert_mid.png diff.png || true
-          mv diff.png ${{ github.workspace }}/ci-artifacts/pr
+          mv diff.png ${{ github.workspace }}/pr/ci-artifacts
 
       - name: Push Screenshots
-        working-directory: ${{ github.workspace }}/ci-artifacts/pr
+        working-directory: ${{ github.workspace }}/pr/ci-artifacts
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          git add ${{ github.workspace }}/ci-artifacts/pr/diff.png
+          git add ${{ github.workspace }}/pr/ci-artifacts/diff.png
           git commit -m "screenshots for PR #${{ github.event.number }}"
           git push origin pr_ui --force
 
