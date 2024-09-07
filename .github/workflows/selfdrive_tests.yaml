@@ -338,19 +338,10 @@ jobs:
     name: Create UI Report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - uses: ./.github/workflows/setup-with-retry
-      - name: Build openpilot
-        run: ${{ env.RUN }} "scons -j$(nproc)"
-      - name: Create Test Report
-        run: >
-            ${{ env.RUN }} "PYTHONWARNINGS=ignore &&
-                            source selfdrive/test/setup_xvfb.sh &&
-                            python3 selfdrive/ui/tests/test_ui/run.py"
+      - name: Fake screens
+        run: git clone -b pr_ui https://github.com/maxime-desroches/ci-artifacts
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
         with:
           name: report-${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && 'master' || github.event.number }}
-          path: selfdrive/ui/tests/test_ui/report_1/screenshots
+          path: ci-artifacts

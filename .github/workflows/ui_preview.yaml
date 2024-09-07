@@ -19,7 +19,7 @@ env:
 
 jobs:
   preview:
-    if: github.repository == 'commaai/openpilot'
+    if: github.repository == 'maxime-desroches/openpilot'
     name: preview
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -58,7 +58,7 @@ jobs:
       - name: Getting master ui
         uses: actions/checkout@v4
         with:
-          repository: commaai/ci-artifacts
+          repository: maxime-desroches/ci-artifacts
           ssh-key: ${{ secrets.CI_ARTIFACTS_DEPLOY_KEY }}
           path: ${{ github.workspace }}/master_ui
           ref: openpilot_master_ui
@@ -105,13 +105,13 @@ jobs:
               DIFF="${DIFF}<table>"
 
               DIFF="${DIFF}<tr>"
-              DIFF="${DIFF}  <td> master <img src=\"https://raw.githubusercontent.com/commaai/ci-artifacts/openpilot_master_ui/${A[$i]}.png\"> </td>"
-              DIFF="${DIFF}  <td> proposed <img src=\"https://raw.githubusercontent.com/commaai/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}.png\"> </td>"
+              DIFF="${DIFF}  <td> master <img src=\"https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/openpilot_master_ui/${A[$i]}.png\"> </td>"
+              DIFF="${DIFF}  <td> proposed <img src=\"https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}.png\"> </td>"
               DIFF="${DIFF}</tr>"
 
               DIFF="${DIFF}<tr>"
-              DIFF="${DIFF}  <td> diff <img src=\"https://raw.githubusercontent.com/commaai/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}_diff.png\"> </td>"
-              DIFF="${DIFF}  <td> composite diff <img src=\"https://raw.githubusercontent.com/commaai/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}_diff.gif\"> </td>"
+              DIFF="${DIFF}  <td> diff <img src=\"https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}_diff.png\"> </td>"
+              DIFF="${DIFF}  <td> composite diff <img src=\"https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}_diff.gif\"> </td>"
               DIFF="${DIFF}</tr>"
 
               DIFF="${DIFF}</table>"
@@ -124,7 +124,7 @@ jobs:
             if [[ $INDEX -eq 0 ]]; then
               TABLE="${TABLE}<tr>"
             fi
-            TABLE="${TABLE}  <td> <img src=\"https://raw.githubusercontent.com/commaai/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}.png\"> </td>"
+            TABLE="${TABLE}  <td> <img src=\"https://raw.githubusercontent.com/maxime-desroches/ci-artifacts/${{ env.BRANCH_NAME }}/${A[$i]}.png\"> </td>"
             if [[ $INDEX -eq 1 || $(($i + 1)) -eq ${#A[*]} ]]; then
               TABLE="${TABLE}</tr>"
             fi
